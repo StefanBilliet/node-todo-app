@@ -12,7 +12,7 @@ app.post('/todos', (request, response) => {
   const todo = new Todo({
     text: request.body.text
   });
-  
+
   todo.save((error, document) => {
     if(error) {
       response.status(400).send(error).end();
@@ -26,3 +26,5 @@ app.post('/todos', (request, response) => {
 app.listen(3000, () => {
   console.log('Started on port 3000');
 });
+
+module.exports = { app };
