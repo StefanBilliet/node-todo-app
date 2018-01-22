@@ -8,19 +8,28 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.post('/todos', (request, response) => {
+app.post('/todos', async (request, response) => {
   const todo = new Todo({
     text: request.body.text
   });
 
-  todo.save((error, document) => {
-    if(error) {
-      response.status(400).send(error).end();
-      return;
-    }
-    
-    response.send(document).end();
-  });
+  try {
+    todo.save();
+    response.send(document);
+  } catch (error) {
+    response.status(400).send(error);
+  }
+});
+
+app.get('/todos', async (request, response) => {
+  try {
+    const todos = await Todo.find();  
+    response.send({
+      todos
+    });
+  } catch(error) {
+    response.status(500).send(error);
+  }
 });
 
 app.listen(3000, () => {
