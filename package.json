@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node server",
     "test": "jest",
     "test:watch": "jest --watch"
   },
@@ -13,12 +14,15 @@
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "mongodb": "^3.0.1",
-    "mongoose": "^5.0.0",
-    "sinon": "^4.2.0"
+    "mongoose": "^5.0.0"    
   },
   "devDependencies": {
     "jest": "^22.1.4",
     "nodemon": "^1.14.11",
-    "supertest": "^3.0.0"
+    "supertest": "^3.0.0",
+    "sinon": "^4.2.0"
+  },
+  "engines": {
+    "node": "9.4.0"
   }
 }
