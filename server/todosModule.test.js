@@ -44,7 +44,6 @@ describe('POST /todos', () => {
   });
 });
 
-
 describe('GET /todos', () => {
   test('should return todos', async () => {
     const todos = [{
@@ -57,6 +56,40 @@ describe('GET /todos', () => {
     .get('/todos');
 
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({todos});
+    expect(response.text).toEqual(JSON.stringify({todos}));
+  });
+});
+
+describe('GET /todos/id', () => {
+  describe('Given no todo with id', () => {
+    test('should return 404', async () => {
+      const todoId = new mongoose.Types.ObjectId('5a6106521b12fe0955193508');      
+      sandbox.stub(Todo, 'findById').withArgs(todoId).returns(null);
+
+      const response = await request(app)
+      .get(`/todos/${todoId}`)
+      .set('Accept', 'application/json');
+
+      expect(response.status).toBe(404);
+      expect(response.text).toBe('todo');
+    });
+  });
+
+  describe('Given todo with id', () => {
+    test('should return 200 with todo in body', async () => {   
+      const todo = {
+        _id: new mongoose.Types.ObjectId('5a6106521b12fe0955193508'),
+        text: 'Something to do'
+      };
+
+      sandbox.stub(Todo, 'findById').withArgs(todo._id.toHexString()).returns(todo);
+
+      const response = await request(app)
+      .get(`/todos/${todo._id}`)
+      .set('Accept', 'application/json');
+
+      expect(response.status).toBe(200);
+      expect(response.text).toEqual(JSON.stringify(todo));
+    });
   });
 });

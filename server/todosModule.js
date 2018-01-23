@@ -1,6 +1,5 @@
 module.exports = (app, Todo) => {
   app.post('/todos', async (request, response) => {
-    debugger;
     const todo = new Todo({
       text: request.body.text
     });
@@ -19,6 +18,21 @@ module.exports = (app, Todo) => {
       response.send({
         todos
       });
+    } catch (error) {
+      response.status(500).send(error);
+    }
+  });
+
+  app.get('/todos/:id', async (request, response) => {
+    try {
+      const todo = await Todo.findById(request.params.id);
+
+      if (!todo) {
+        response.status(404).send('todo');
+        return;
+      }
+
+      response.send(todo);
     } catch (error) {
       response.status(500).send(error);
     }
