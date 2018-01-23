@@ -37,4 +37,19 @@ module.exports = (app, Todo) => {
       response.status(500).send(error);
     }
   });
+
+  app.delete('/todos/:id', async (request, response) => {
+    try {
+      const deletedTodo = await Todo.findByIdAndRemove(request.params.id);
+
+      if (!deletedTodo) {
+        response.status(404).send('todo');
+        return;
+      }
+
+      response.status(200).send(deletedTodo);
+    } catch (error) {
+      response.status(500).send(error);
+    }
+  });
 }

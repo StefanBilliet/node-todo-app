@@ -93,3 +93,37 @@ describe('GET /todos/id', () => {
     });
   });
 });
+
+describe('DELETE /todos/id', () => {
+  describe('Given no todo with id', () => {
+    test('should return 404', async () => {
+      const todoId = new mongoose.Types.ObjectId('5a6106521b12fe0955193508');      
+      sandbox.stub(Todo, 'findByIdAndRemove').withArgs(todoId).returns(null);
+
+      const response = await request(app)
+      .delete(`/todos/${todoId}`)
+      .set('Accept', 'application/json');
+
+      expect(response.status).toBe(404);
+      expect(response.text).toBe('todo');
+    });
+  });
+
+  describe('Given todo with id', () => {
+    test('should delete todo and return 201 with deleted todo in body', async () => {   
+      const todo = {
+        _id: new mongoose.Types.ObjectId('5a6106521b12fe0955193508'),
+        text: 'Something to do'
+      };
+
+      sandbox.stub(Todo, 'findByIdAndRemove').withArgs(todo._id.toHexString()).returns(todo);
+
+      const response = await request(app)
+      .delete(`/todos/${todo._id}`)
+      .set('Accept', 'application/json');
+
+      expect(response.status).toBe(200);
+      expect(response.text).toEqual(JSON.stringify(todo));
+    });
+  });
+});
